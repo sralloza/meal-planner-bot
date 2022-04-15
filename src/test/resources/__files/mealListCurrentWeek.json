@@ -1,0 +1,65 @@
+[
+  {
+    "date": "2022-02-21",
+    "lunch1": "lunch1-current-week-monday",
+    "lunch1_frozen": false,
+    "lunch2": "lunch2-current-week-monday",
+    "lunch2_frozen": false,
+    "dinner": "dinner-current-week-monday",
+    "dinner_frozen": false
+  },
+  {
+    "date": "2022-02-22",
+    "lunch1": "lunch1-current-week-tuesday",
+    "lunch1_frozen": false,
+    "lunch2": null,
+    "lunch2_frozen": false,
+    "dinner": "dinner-current-week-tuesday",
+    "dinner_frozen": false
+  },
+  {
+    "date": "2022-02-23",
+    "lunch1": "lunch1-current-week-wednesday",
+    "lunch1_frozen": true,
+    "lunch2": "lunch2-current-week-wednesday",
+    "lunch2_frozen": false,
+    "dinner": "dinner-current-week-wednesday",
+    "dinner_frozen": false
+  },
+  {
+    "date": "2022-02-24",
+    "lunch1": "lunch1-current-week-thursday",
+    "lunch1_frozen": false,
+    "lunch2": "lunch2-current-week-thursday",
+    "lunch2_frozen": true,
+    "dinner": "dinner-current-week-thursday",
+    "dinner_frozen": true
+  },
+  {
+    "date": "2022-02-25",
+    "lunch1": "lunch1-current-week-friday",
+    "lunch1_frozen": true,
+    "lunch2": "lunch2-current-week-friday",
+    "lunch2_frozen": true,
+    "dinner": "dinner-current-week-friday",
+    "dinner_frozen": true
+  },
+  {
+    "date": "2022-02-26",
+    "lunch1": "lunch1-current-week-saturday",
+    "lunch1_frozen": false,
+    "lunch2": "null",
+    "lunch2_frozen": false,
+    "dinner": "N/A",
+    "dinner_frozen": false
+  },
+  {
+    "date": "2022-02-27",
+    "lunch1": "N/A",
+    "lunch1_frozen": false,
+    "lunch2": null,
+    "lunch2_frozen": false,
+    "dinner": "N/A",
+    "dinner_frozen": false
+  }
+]
