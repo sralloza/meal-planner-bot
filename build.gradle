@@ -4,6 +4,19 @@ plugins {
     id "io.freefair.lombok" version "6.4.1"
 }
 
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+
+        showExceptions true
+        exceptionFormat "full"
+        showCauses true
+        showStackTraces true
+
+        showStandardStreams false
+    }
+}
+
 group 'es.sralloza'
 version '1.0.0'
 def mainClassName = 'Main'
