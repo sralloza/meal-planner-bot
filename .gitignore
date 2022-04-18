@@ -180,4 +180,5 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/intellij,java,maven,gradle
 
 .idea/
+bin/
 /**/.DS_Store
