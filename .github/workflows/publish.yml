@@ -7,7 +7,7 @@ on:
     branches: [docker-ci]
 
 jobs:
-  docker:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '11'
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -40,4 +40,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
-          tags: "sralloza/meal-planner-bot-test:${{ steps.project_version.outputs.version }}"
+          tags: "sralloza/meal-planner-bot:${{ steps.project_version.outputs.version }}"
