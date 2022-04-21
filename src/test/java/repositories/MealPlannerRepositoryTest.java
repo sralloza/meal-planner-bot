@@ -54,16 +54,20 @@ public class MealPlannerRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        long time = System.currentTimeMillis();
+        int port = 8080 + (int) (time % 30000);
+        System.out.println("Using port: " + port);
+
         MockitoAnnotations.openMocks(this);
-        Mockito.when(config.getString("api.baseURL")).thenReturn("http://localhost:8080");
+        Mockito.when(config.getString("api.baseURL")).thenReturn("http://localhost:" + port);
         Mockito.when(config.getString("api.token")).thenReturn("uuid");
         Mockito.when(dateUtils.getYesterdayDate()).thenReturn(LocalDate.of(2022, 7, 17));
         Mockito.when(dateUtils.getLastWeekNumber()).thenReturn(7);
 
-        wireMockServer = new WireMockServer(8080);
+        wireMockServer = new WireMockServer(port);
         wireMockServer.start();
 
-        configureFor("localhost", 8080);
+        configureFor("localhost", port);
 
         stubFor(get(urlEqualTo("/meals/2022-07-17"))
                 .willReturn(aResponse().withBodyFile("singleMealYesterday.json")));
@@ -107,6 +111,7 @@ public class MealPlannerRepositoryTest {
         Meal expected = readJson(Meal.class, "__files/singleMealTomorrow.json");
         assertEquals(expected, result);
     }
+
     @Test
     void shouldGetLastWeekMeals() throws Exception {
         MealList result = repository.getLastWeekMeals().get();
