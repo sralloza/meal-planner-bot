@@ -5,12 +5,12 @@ import repositories.MealPlannerRepository;
 
 import java.util.concurrent.CompletableFuture;
 
-import static contants.Messages.CURRENT_WEEK_MSG;
-import static contants.Messages.LAST_WEEK_MSG;
-import static contants.Messages.NEXT_WEEK_MSG;
-import static contants.Messages.TODAY_MSG;
-import static contants.Messages.TOMORROW_MSG;
-import static contants.Messages.YESTERDAY_MSG;
+import static constants.Messages.CURRENT_WEEK_MSG;
+import static constants.Messages.LAST_WEEK_MSG;
+import static constants.Messages.NEXT_WEEK_MSG;
+import static constants.Messages.TODAY_MSG;
+import static constants.Messages.TOMORROW_MSG;
+import static constants.Messages.YESTERDAY_MSG;
 
 public class MealPlannerService {
     private final MealPlannerRepository repository;

@@ -4,9 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.Inject;
-import config.Config;
+import config.ConfigRepository;
 import models.Meal;
 import models.MealList;
+import org.jetbrains.annotations.NotNull;
 import utils.DateUtils;
 
 import java.net.URI;
@@ -14,11 +15,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.TemporalField;
-import java.time.temporal.WeekFields;
-import java.util.Locale;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class MealPlannerRepository {
@@ -27,15 +24,14 @@ public class MealPlannerRepository {
     private final DateUtils dateUtils;
 
     @Inject
-    public MealPlannerRepository(Config config, DateUtils dateUtils) {
-        token = config.getenv("API_TOKEN");
-        baseURL = config.getenv("API_BASE_URL");
+    public MealPlannerRepository(ConfigRepository config, DateUtils dateUtils) {
+        token = config.getString("api.token");
+        baseURL = config.getString("api.baseURL");
         this.dateUtils = dateUtils;
     }
 
     private <T> CompletableFuture<T> sendRequest(String path, Class<T> clazz) {
         HttpClient client = HttpClient.newHttpClient();
-        ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(baseURL + path))
                 .header("Content-Type", "application/json")
@@ -43,18 +39,29 @@ public class MealPlannerRepository {
                 .header("User-Agent", "MealPlanner/1.0")
                 .GET()
                 .build();
-        return client.sendAsync(request, BodyHandlers.ofString())
-                .thenApply(HttpResponse::body)
-                .thenApply(body -> {
-                    try {
-                        return mapper.readValue(body, clazz);
-                    } catch (JsonProcessingException e) {
-                        System.err.println("Error parsing response: " + body);
-                        e.printStackTrace();
-                        return null;
-                    }
-                });
 
+        return client.sendAsync(request, BodyHandlers.ofString())
+                .thenApply(this::getBodyOpt)
+                .thenApply(bodyOpt -> bodyOpt.map(body -> processBody(body, clazz)).orElse(null));
+    }
+
+    private <T> T processBody(String body, Class<T> clazz) {
+        ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        try {
+            return mapper.readValue(body, clazz);
+        } catch (JsonProcessingException e) {
+            System.err.println("Error parsing response: " + body);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @NotNull
+    private Optional<String> getBodyOpt(HttpResponse<String> response) {
+        if (response.statusCode() == 404) {
+            return Optional.empty();
+        }
+        return Optional.of(response.body());
     }
 
     public CompletableFuture<Meal> getYesterdayMeal() {

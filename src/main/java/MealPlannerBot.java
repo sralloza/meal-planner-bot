@@ -1,5 +1,5 @@
 import com.google.inject.Inject;
-import config.Config;
+import config.ConfigRepository;
 import lombok.SneakyThrows;
 import models.Meal;
 import models.MealList;
@@ -25,13 +25,13 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 
-import static contants.Messages.CURRENT_WEEK_MSG;
-import static contants.Messages.DEFAULT_CALLBACK;
-import static contants.Messages.LAST_WEEK_MSG;
-import static contants.Messages.NEXT_WEEK_MSG;
-import static contants.Messages.TODAY_MSG;
-import static contants.Messages.TOMORROW_MSG;
-import static contants.Messages.YESTERDAY_MSG;
+import static constants.Messages.CURRENT_WEEK_MSG;
+import static constants.Messages.DEFAULT_CALLBACK;
+import static constants.Messages.LAST_WEEK_MSG;
+import static constants.Messages.NEXT_WEEK_MSG;
+import static constants.Messages.TODAY_MSG;
+import static constants.Messages.TOMORROW_MSG;
+import static constants.Messages.YESTERDAY_MSG;
 import static org.telegram.abilitybots.api.db.MapDBContext.offlineInstance;
 import static org.telegram.abilitybots.api.objects.Locality.USER;
 import static org.telegram.abilitybots.api.objects.Privacy.CREATOR;
@@ -43,16 +43,12 @@ public class MealPlannerBot extends AbilityBot {
     private Integer menuMessage;
 
     @Inject
-    public MealPlannerBot(MealPlannerService service, Config config) {
-        super(config.getenv("TELEGRAM_BOT_TOKEN"),
-                config.getenv("TELEGRAM_BOT_USERNAME"),
+    public MealPlannerBot(MealPlannerService service, ConfigRepository config) {
+        super(config.getString("telegram.bot.token"),
+                config.getString("telegram.bot.username"),
                 offlineInstance("db"));
 
-        String telegramTokenBot = config.getenv("TELEGRAM_BOT_TOKEN");
-        if (Optional.ofNullable(telegramTokenBot).orElse("").isEmpty()) {
-            throw new IllegalArgumentException("Token is empty");
-        }
-        creatorId = Optional.ofNullable(config.getenv("TELEGRAM_CREATOR_ID"))
+        creatorId = Optional.ofNullable(config.getString("telegram.creatorID"))
                 .map(Long::parseLong)
                 .orElseThrow(() -> new IllegalArgumentException("Creator id is empty"));
 
@@ -195,7 +191,9 @@ public class MealPlannerBot extends AbilityBot {
 
     private void sendMenuAsync(MessageContext ctx) {
         SendMessage msg = new SendMessage();
-        msg.setText("Select the command:");
+        msg.setText("*API connected*");
+        msg.disableNotification();
+        msg.enableMarkdownV2(true);
         msg.setChatId(Long.toString(ctx.chatId()));
         msg.setReplyMarkup(getMainMenuKeyboard());
 
