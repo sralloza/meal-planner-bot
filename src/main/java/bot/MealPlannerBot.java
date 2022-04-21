@@ -1,3 +1,5 @@
+package bot;
+
 import com.google.inject.Inject;
 import config.ConfigRepository;
 import lombok.SneakyThrows;
@@ -15,7 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.meta.updateshandlers.SentCallback;
 import services.MealPlannerService;
-import utils.annotations.AbilityMark;
+import annotations.AbilityMark;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

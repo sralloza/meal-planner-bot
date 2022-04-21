@@ -4,8 +4,6 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.meta.updateshandlers.SentCallback;
 
-import java.io.Serializable;
-
 public class Messages {
     public static final String TODAY_MSG = "\uD83D\uDCC5 Today";
     public static final String TOMORROW_MSG = "\uD83C\uDF81 Tomorrow";
@@ -17,9 +15,9 @@ public class Messages {
 
     public static final Callback DEFAULT_CALLBACK = new Callback();
 
-    private static class Callback implements SentCallback {
+    private static class Callback implements SentCallback<Boolean> {
         @Override
-        public void onResult(BotApiMethod method, Serializable response) {
+        public void onResult(BotApiMethod method, Boolean response) {
         }
 
         @Override

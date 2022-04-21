@@ -1,3 +1,4 @@
+import bot.MealPlannerBot;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.telegram.telegrambots.meta.TelegramBotsApi;

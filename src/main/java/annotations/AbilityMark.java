@@ -1,4 +1,4 @@
-package utils.annotations;
+package annotations;
 
 public @interface AbilityMark {
 }
