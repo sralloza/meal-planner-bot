@@ -18,7 +18,6 @@ import utils.DateUtils;
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Date;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
@@ -60,7 +59,7 @@ public class MealPlannerRepositoryTest {
         System.out.println("Using port: " + port);
 
         MockitoAnnotations.openMocks(this);
-        Mockito.when(config.getString("api.baseURL")).thenReturn("http://localhost:8080");
+        Mockito.when(config.getString("api.baseURL")).thenReturn("http://localhost:" + port);
         Mockito.when(config.getString("api.token")).thenReturn("uuid");
         Mockito.when(dateUtils.getYesterdayDate()).thenReturn(LocalDate.of(2022, 7, 17));
         Mockito.when(dateUtils.getLastWeekNumber()).thenReturn(7);
@@ -112,6 +111,7 @@ public class MealPlannerRepositoryTest {
         Meal expected = readJson(Meal.class, "__files/singleMealTomorrow.json");
         assertEquals(expected, result);
     }
+
     @Test
     void shouldGetLastWeekMeals() throws Exception {
         MealList result = repository.getLastWeekMeals().get();
