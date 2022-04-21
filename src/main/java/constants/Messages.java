@@ -1,4 +1,4 @@
-package contants;
+package constants;
 
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
