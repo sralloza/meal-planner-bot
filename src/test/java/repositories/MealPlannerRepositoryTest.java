@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.tomakehurst.wiremock.WireMockServer;
-import config.Config;
+import config.ConfigRepository;
 import models.Meal;
 import models.MealList;
 import org.junit.jupiter.api.AfterEach;
@@ -48,7 +48,7 @@ public class MealPlannerRepositoryTest {
     }
 
     @Mock
-    private Config config;
+    private ConfigRepository config;
 
     @Mock
     private DateUtils dateUtils;
@@ -60,8 +60,8 @@ public class MealPlannerRepositoryTest {
         System.out.println("Using port: " + port);
 
         MockitoAnnotations.openMocks(this);
-        Mockito.when(config.getenv("API_BASE_URL")).thenReturn("http://localhost:" + port);
-        Mockito.when(config.getenv("API_TOKEN")).thenReturn("uuid");
+        Mockito.when(config.getString("api.baseURL")).thenReturn("http://localhost:8080");
+        Mockito.when(config.getString("api.token")).thenReturn("uuid");
         Mockito.when(dateUtils.getYesterdayDate()).thenReturn(LocalDate.of(2022, 7, 17));
         Mockito.when(dateUtils.getLastWeekNumber()).thenReturn(7);
 

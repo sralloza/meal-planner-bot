@@ -182,3 +182,5 @@ gradle-app.setting
 .idea/
 bin/
 /**/.DS_Store
+db
+db.wal.0

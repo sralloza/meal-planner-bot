@@ -1,5 +1,5 @@
 import com.google.inject.Inject;
-import config.Config;
+import config.ConfigRepository;
 import lombok.SneakyThrows;
 import models.Meal;
 import models.MealList;
@@ -43,16 +43,12 @@ public class MealPlannerBot extends AbilityBot {
     private Integer menuMessage;
 
     @Inject
-    public MealPlannerBot(MealPlannerService service, Config config) {
-        super(config.getenv("TELEGRAM_BOT_TOKEN"),
-                config.getenv("TELEGRAM_BOT_USERNAME"),
+    public MealPlannerBot(MealPlannerService service, ConfigRepository config) {
+        super(config.getString("telegram.bot.token"),
+                config.getString("telegram.bot.username"),
                 offlineInstance("db"));
 
-        String telegramTokenBot = config.getenv("TELEGRAM_BOT_TOKEN");
-        if (Optional.ofNullable(telegramTokenBot).orElse("").isEmpty()) {
-            throw new IllegalArgumentException("Token is empty");
-        }
-        creatorId = Optional.ofNullable(config.getenv("TELEGRAM_CREATOR_ID"))
+        creatorId = Optional.ofNullable(config.getString("telegram.creatorID"))
                 .map(Long::parseLong)
                 .orElseThrow(() -> new IllegalArgumentException("Creator id is empty"));
 
@@ -195,7 +191,9 @@ public class MealPlannerBot extends AbilityBot {
 
     private void sendMenuAsync(MessageContext ctx) {
         SendMessage msg = new SendMessage();
-        msg.setText("Select the command:");
+        msg.setText("*API connected*");
+        msg.disableNotification();
+        msg.enableMarkdownV2(true);
         msg.setChatId(Long.toString(ctx.chatId()));
         msg.setReplyMarkup(getMainMenuKeyboard());
 
