@@ -1,4 +1,10 @@
-FROM openjdk:17.0.2-slim-buster AS build
+FROM ubuntu:20.04 AS base
+
+RUN apt-get update && \
+    apt-get install -y openjdk-11-jre-headless && \
+    apt-get clean;
+
+FROM base as build
 
 WORKDIR /home/gradle
 
@@ -9,7 +15,7 @@ COPY build.gradle settings.gradle gradlew /home/gradle/
 RUN ./gradlew test --scan
 RUN ./gradlew fat -i
 
-FROM openjdk:17.0.2-slim-buster
+FROM base
 
 RUN mkdir /app
 
