@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.Inject;
-import config.Config;
+import config.ConfigRepository;
 import models.Meal;
 import models.MealList;
 import org.jetbrains.annotations.NotNull;
@@ -24,9 +24,9 @@ public class MealPlannerRepository {
     private final DateUtils dateUtils;
 
     @Inject
-    public MealPlannerRepository(Config config, DateUtils dateUtils) {
-        token = config.getenv("API_TOKEN");
-        baseURL = config.getenv("API_BASE_URL");
+    public MealPlannerRepository(ConfigRepository config, DateUtils dateUtils) {
+        token = config.getString("api.token");
+        baseURL = config.getString("api.baseURL");
         this.dateUtils = dateUtils;
     }
 
