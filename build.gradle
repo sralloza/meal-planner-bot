@@ -18,7 +18,7 @@ test {
 }
 
 group 'es.sralloza'
-version '1.0.0'
+version '1.0.1'
 def mainClassName = 'Main'
 
 repositories {
@@ -31,6 +31,11 @@ dependencies {
     implementation 'org.projectlombok:lombok:1.18.22'
     implementation 'com.google.inject:guice:5.1.0'
     implementation 'com.typesafe:config:1.4.2'
+
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+    implementation 'ch.qos.logback:logback-classic:1.2.11'
+    implementation 'ch.qos.logback:logback-core:1.2.11'
+    implementation 'net.logstash.logback:logstash-logback-encoder:7.0.1'
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2'
