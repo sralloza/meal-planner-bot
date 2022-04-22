@@ -1,10 +1,7 @@
 package utils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.TemporalField;
-import java.time.temporal.WeekFields;
-import java.util.Locale;
+import java.time.temporal.ChronoField;
 
 public class DateUtils {
     public LocalDate getYesterdayDate() {
@@ -12,8 +9,6 @@ public class DateUtils {
     }
 
     public int getLastWeekNumber() {
-        LocalDateTime localDateTime = LocalDateTime.now().minusDays(7);
-        TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
-        return localDateTime.get(woy);
+        return LocalDate.now().minusDays(7).get(ChronoField.ALIGNED_WEEK_OF_YEAR);
     }
 }
