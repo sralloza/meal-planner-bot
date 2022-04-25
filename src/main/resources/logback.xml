@@ -1,9 +1,7 @@
-<!-- https://www.playframework.com/documentation/latest/SettingsLogger -->
 <configuration>
+    <include resource="initial.xml"/>
 
-<!--    <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel"/>-->
-
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
                 <pattern>
@@ -24,17 +22,12 @@
         </encoder>
     </appender>
 
-    <appender name="ASYNCSTDOUT" class="ch.qos.logback.classic.AsyncAppender">
-        <appender-ref ref="STDOUT"/>
-    </appender>
-
-    <logger name="application" level="${general.logLevel}"/>
-    <logger name="services" level="${general.logLevel}"/>
-    <logger name="repositories" level="${general.logLevel}"/>
-
-    <root level="WARN">
-        <appender-ref ref="ASYNCSTDOUT"/>
+    <root level="DEBUG">
+        <appender-ref ref="stdout"/>
     </root>
 
+    <Logger name="services" level="${logLevel}"/>
+    <Logger name="repositories" level="${logLevel}"/>
+    <Logger name="mappers" level="${logLevel}"/>
+    <Logger name="utils" level="${logLevel}"/>
 </configuration>
-
