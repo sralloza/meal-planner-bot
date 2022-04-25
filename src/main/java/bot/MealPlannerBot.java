@@ -81,8 +81,14 @@ public class MealPlannerBot extends AbilityBot {
                 .info("Starts the bot")
                 .locality(USER)
                 .privacy(CREATOR)
-                .action(this::sendMenuAsync)
+                .action(this::sendMenuAndClearMessages)
                 .build();
+    }
+
+    public void sendMenuAndClearMessages(MessageContext ctx) {
+        sender.deleteUserMessage(ctx);
+        sender.deleteBotMessages(ctx.chatId());
+        recreateMenuMessage(ctx);
     }
 
     private void recreateMenuMessage(MessageContext ctx) {
