@@ -1,44 +1,38 @@
-package services;
+package bot;
 
-import bot.Keyboards;
-import com.google.inject.Inject;
+import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.MessageContext;
-import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import repositories.messages.MessagesRepository;
+import services.MealPlannerService;
 
 import static constants.Messages.DEFAULT_CALLBACK;
+import static org.telegram.abilitybots.api.db.MapDBContext.offlineInstance;
 
-public class MessagesSenderService {
-    private SilentSender sender;
+public abstract class BaseMealPlannerBot extends AbilityBot {
     private final MessagesRepository messagesRepository;
     private final Keyboards keyboards;
+    protected final MealPlannerService service;
 
-    @Inject
-    public MessagesSenderService(MessagesRepository messagesRepository, Keyboards keyboards) {
+    protected BaseMealPlannerBot(String botToken,
+                                 String botUsername,
+                                 MessagesRepository messagesRepository,
+                                 Keyboards keyboards,
+                                 MealPlannerService service) {
+        super(botToken, botUsername, offlineInstance("db"));
         this.messagesRepository = messagesRepository;
         this.keyboards = keyboards;
+        this.service = service;
     }
 
-    public void setSender(SilentSender sender) {
-        this.sender = sender;
-    }
-
-    private void checkSender() {
-        if (sender == null) {
-            throw new IllegalStateException("Sender is not set");
-        }
-    }
-
-    public void sendMessage(String msgStr, Long chatId) {
-        checkSender();
+    protected void sendMessage(String msgStr, Long chatId) {
         SendMessage msg = new SendMessage();
         msg.setText(msgStr);
         msg.setChatId(chatId.toString());
         msg.setReplyMarkup(keyboards.getMainMenuKeyboard());
 
-        var r = sender.execute(msg);
+        var r = silent.execute(msg);
         if (r.isEmpty()) {
             System.out.println("Error sending message");
         } else {
@@ -46,8 +40,7 @@ public class MessagesSenderService {
         }
     }
 
-    public void deleteBotMessages(Long chatId) {
-        checkSender();
+    protected void deleteBotMessages(Long chatId) {
         var messageIDList = messagesRepository.getMessages();
         for (var messageID : messageIDList) {
             deleteMessageAsyncById(chatId, messageID);
@@ -56,12 +49,11 @@ public class MessagesSenderService {
     }
 
     public void deleteMessageAsyncById(Long chatId, Integer messageId) {
-        checkSender();
         DeleteMessage deleteMessage = new DeleteMessage();
         deleteMessage.setChatId(chatId.toString());
         deleteMessage.setMessageId(messageId);
 
-        sender.executeAsync(deleteMessage, DEFAULT_CALLBACK);
+        silent.executeAsync(deleteMessage, DEFAULT_CALLBACK);
     }
 
     public void deleteUserMessage(MessageContext ctx) {

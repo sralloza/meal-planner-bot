@@ -5,7 +5,6 @@ import config.ConfigRepository;
 import lombok.SneakyThrows;
 import models.Meal;
 import models.MealList;
-import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.abilitybots.api.objects.MessageContext;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -13,8 +12,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.meta.updateshandlers.SentCallback;
+import repositories.messages.MessagesRepository;
 import services.MealPlannerService;
-import services.MessagesSenderService;
 import utils.MealUtils;
 
 import java.util.Optional;
@@ -27,37 +26,33 @@ import static constants.Messages.TITLE_MAP;
 import static constants.Messages.TODAY_MSG;
 import static constants.Messages.TOMORROW_MSG;
 import static constants.Messages.YESTERDAY_MSG;
-import static org.telegram.abilitybots.api.db.MapDBContext.offlineInstance;
 import static org.telegram.abilitybots.api.objects.Locality.USER;
 import static org.telegram.abilitybots.api.objects.Privacy.CREATOR;
 
-public class MealPlannerBot extends AbilityBot {
+public class MealPlannerBot extends BaseMealPlannerBot {
     private final Long creatorId;
-    private final MealPlannerService service;
     private final MealUtils mealUtils;
-    private final MessagesSenderService sender;
     private final Keyboards keyboards;
     private Integer menuMessage;
 
     @Inject
-    public MealPlannerBot(MealPlannerService service,
+    public MealPlannerBot(MessagesRepository messagesRepository,
                           ConfigRepository config,
                           MealUtils mealUtils,
-                          MessagesSenderService sender,
-                          Keyboards keyboards) {
+                          Keyboards keyboards,
+                          MealPlannerService mealPlannerService) {
         super(config.getString("telegram.bot.token"),
                 config.getString("telegram.bot.username"),
-                offlineInstance("db"));
+                messagesRepository,
+                keyboards,
+                mealPlannerService);
 
         creatorId = Optional.ofNullable(config.getString("telegram.creatorID"))
                 .map(Long::parseLong)
                 .orElseThrow(() -> new IllegalArgumentException("Creator id is empty"));
 
-        this.service = service;
         this.mealUtils = mealUtils;
         this.keyboards = keyboards;
-        this.sender = sender;
-        sender.setSender(silent);
     }
 
     @Override
@@ -85,15 +80,15 @@ public class MealPlannerBot extends AbilityBot {
                 .build();
     }
 
-    public void sendMenuAndClearMessages(MessageContext ctx) {
-        sender.deleteUserMessage(ctx);
-        sender.deleteBotMessages(ctx.chatId());
+    private void sendMenuAndClearMessages(MessageContext ctx) {
+        deleteUserMessage(ctx);
+        deleteBotMessages(ctx.chatId());
         recreateMenuMessage(ctx);
     }
 
     private void recreateMenuMessage(MessageContext ctx) {
         Optional.ofNullable(menuMessage)
-                .ifPresent(n -> sender.deleteMessageAsyncById(ctx.chatId(), n));
+                .ifPresent(n -> deleteMessageAsyncById(ctx.chatId(), n));
         sendMenuAsync(ctx);
     }
 
@@ -102,7 +97,7 @@ public class MealPlannerBot extends AbilityBot {
                 .map(m -> msg + ":\n" + mealUtils.toString(m))
                 .orElse("Could not find " + msg.toLowerCase());
 
-        sender.sendMessage(message, chatId);
+        sendMessage(message, chatId);
     }
 
     private void sendMealList(MealList meals, String msg, Long chatId) {
@@ -110,7 +105,7 @@ public class MealPlannerBot extends AbilityBot {
                 .map(m -> msg + ":\n" + mealUtils.toString(m))
                 .orElse("Could not find " + msg.toLowerCase());
 
-        sender.sendMessage(message, chatId);
+        sendMessage(message, chatId);
     }
 
     @SneakyThrows
@@ -121,8 +116,8 @@ public class MealPlannerBot extends AbilityBot {
 
         // 2. Recreate menu message, remove bot and user messages
         recreateMenuMessage(ctx);
-        sender.deleteBotMessages(ctx.chatId());
-        sender.deleteUserMessage(ctx);
+        deleteBotMessages(ctx.chatId());
+        deleteUserMessage(ctx);
 
         //   3. Send data to user
         String title = TITLE_MAP.get(userMessage);
@@ -164,6 +159,6 @@ public class MealPlannerBot extends AbilityBot {
             }
         };
         silent.executeAsync(msg, callback);
-        sender.deleteUserMessage(ctx);
+        deleteUserMessage(ctx);
     }
 }
