@@ -18,7 +18,7 @@ test {
 }
 
 group 'es.sralloza'
-version '1.0.1'
+version '1.0.2'
 def mainClassName = 'Main'
 
 repositories {
@@ -26,27 +26,34 @@ repositories {
 }
 
 dependencies {
+    // Gradle
     implementation 'org.codehaus.groovy:groovy-all:3.0.10'
 
-    implementation 'org.projectlombok:lombok:1.18.22'
-    implementation 'com.google.inject:guice:5.1.0'
-    implementation 'com.typesafe:config:1.4.2'
-
-    implementation 'org.slf4j:slf4j-api:1.7.36'
-    implementation 'ch.qos.logback:logback-classic:1.2.11'
-    implementation 'ch.qos.logback:logback-core:1.2.11'
-    implementation 'net.logstash.logback:logstash-logback-encoder:7.0.1'
-
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2'
-
-    implementation 'org.telegram:telegrambots:5.7.1'
-    implementation 'org.telegram:telegrambots-abilities:5.7.1'
-
-    testImplementation 'org.mockito:mockito-core:4.4.0'
+    // Testing
+    testImplementation 'org.mockito:mockito-core:4.5.1'
     testImplementation 'com.github.tomakehurst:wiremock:2.27.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+
+    // Utils
+    implementation 'org.projectlombok:lombok:1.18.24'
+    implementation 'com.google.inject:guice:5.1.0'
+    implementation 'com.typesafe:config:1.4.2'
+
+    // Json encoding
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2'
+
+    // Telegram
+    implementation 'org.telegram:telegrambots:6.0.1'
+    implementation 'org.telegram:telegrambots-abilities:6.0.1'
+
+    // Logging
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+    implementation 'com.tersesystems.logback:logback-classic:1.0.2'
+    implementation 'com.tersesystems.logback:logback-structured-config:1.0.2'
+    implementation 'com.tersesystems.logback:logback-typesafe-config:1.0.2'
+    implementation 'net.logstash.logback:logstash-logback-encoder:7.1.1'
 }
 
 test {
