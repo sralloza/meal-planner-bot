@@ -7,6 +7,8 @@ import org.telegram.telegrambots.meta.updateshandlers.SentCallback;
 import java.util.Map;
 
 public class Messages {
+    public static final String START_MSG = "*API connected*";
+
     public static final String TODAY_MSG = "\uD83D\uDCC5 Today";
     public static final String TOMORROW_MSG = "\uD83C\uDF81 Tomorrow";
     public static final String YESTERDAY_MSG = "\uD83D\uDCC6 Yesterday";
