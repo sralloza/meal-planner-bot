@@ -1,8 +1,12 @@
 {
-  "yesterday": "Yesterday's meal:\n- Lunes: yl1 & yl2 | yd1",
-  "today": "Today's meal:\n- Martes: tl1 | td1",
-  "tomorrow": "Tomorrow's meal:\n- Miércoles: ml1 & ml2 | md1",
-  "lastWeek": "Last week's meals:\n- Lunes: ll1.0 & ll2.0 | ld.0\n- Martes: ll1.1 & ll2.1 | ld.1\n- Miércoles: ll1.2 & ll2.2 | ld.2\n- Jueves: ll1.3 & ll2.3 | ld.3\n- Viernes: ll1.4 & ll2.4 | ld.4\n- Sábado: ll1.5 & ll2.5 | ld.5\n- Domingo: ll1.6 & ll2.6 | ld.6",
-  "currentWeek": "Current week's meals:\n- Lunes: cl1.0 & cl2.0 | cd.0\n- Martes: cl1.1 & cl2.1 | cd.1\n- Miércoles: cl1.2 & cl2.2 | cd.2\n- Jueves: cl1.3 & cl2.3 | cd.3\n- Viernes: cl1.4 & cl2.4 | cd.4\n- Sábado: cl1.5 & cl2.5 | cd.5",
-  "nextWeek": "Next week's meals:\n- Lunes: nl1.0 & nl2.0 | nd.0\n- Martes: nl1.1 & nl2.1 | nd.1\n- Miércoles: nl1.2 & nl2.2 | nd.2\n- Jueves: nl1.3 & nl2.3 | nd.3\n- Viernes: nl1.4 & nl2.4 | nd.4"
+  "twoDaysAgo": "Two days ago meal:\n- Domingo: gl1 & gl2 | gd",
+  "yesterday": "Yesterday meal:\n- Lunes: yl1 & yl2 | yd",
+  "today": "Today meal:\n- Martes: tl1 | td",
+  "tomorrow": "Tomorrow meal:\n- Miércoles: ml1 & ml2 | md",
+  "twoDaysAhead": "Two days ahead meal:\n- Jueves: hl1 & hl2 | hd",
+  "twoWeeksAgo":  "Two weeks ago meals:\n- Lunes: gl1.0 & gl2.0 | gd.0\n- Martes: gl1.1 & gl2.1 | gd.1\n- Miércoles: gl1.2 & gl2.2 | gd.2\n- Jueves: gl1.3 & gl2.3 | gd.3\n- Viernes: gl1.4 & gl2.4 | gd.4\n- Sábado: gl1.5 & gl2.5 | gd.5\n- Domingo: gl1.6 & gl2.6 | gd.6",
+  "lastWeek": "Last week meals:\n- Lunes: ll1.0 & ll2.0 | ld.0\n- Martes: ll1.1 & ll2.1 | ld.1\n- Miércoles: ll1.2 & ll2.2 | ld.2\n- Jueves: ll1.3 & ll2.3 | ld.3\n- Viernes: ll1.4 & ll2.4 | ld.4\n- Sábado: ll1.5 & ll2.5 | ld.5\n- Domingo: ll1.6 & ll2.6 | ld.6",
+  "currentWeek": "Current week meals:\n- Lunes: cl1.0 & cl2.0 | cd.0\n- Martes: cl1.1 & cl2.1 | cd.1\n- Miércoles: cl1.2 & cl2.2 | cd.2\n- Jueves: cl1.3 & cl2.3 | cd.3\n- Viernes: cl1.4 & cl2.4 | cd.4\n- Sábado: cl1.5 & cl2.5 | cd.5",
+  "nextWeek": "Next week meals:\n- Lunes: nl1.0 & nl2.0 | nd.0\n- Martes: nl1.1 & nl2.1 | nd.1\n- Miércoles: nl1.2 & nl2.2 | nd.2\n- Jueves: nl1.3 & nl2.3 | nd.3\n- Viernes: nl1.4 & nl2.4 | nd.4",
+  "twoWeeksAhead":  "Two weeks ahead meals:\n- Lunes: hl1.0 & hl2.0 | hd.0\n- Martes: hl1.1 & hl2.1 | hd.1\n- Miércoles: hl1.2 & hl2.2 | hd.2\n- Jueves: hl1.3 & hl2.3 | hd.3\n- Viernes: hl1.4 & hl2.4 | hd.4\n- Sábado: hl1.5 & hl2.5 | hd.5\n- Domingo: hl1.6 & hl2.6 | hd.6"
 }
