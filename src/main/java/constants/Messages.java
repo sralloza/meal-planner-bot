@@ -9,17 +9,17 @@ import java.util.Map;
 public class Messages {
     public static final String START_MSG = "*API connected*";
 
-    public static final String TOW_DAYS_AGO_MSG = "⏮️";
-    public static final String YESTERDAY_MSG = "⏪";
-    public static final String TODAY_MSG = "▶️";
-    public static final String TOMORROW_MSG = "⏩";
-    public static final String TWO_DAYS_AHEAD_MSG = "⏭️";
+    public static final String TOW_DAYS_AGO_MSG = "\u23EE\uFE0F";
+    public static final String YESTERDAY_MSG = "\u23EA";
+    public static final String TODAY_MSG = "\u25B6\uFE0F";
+    public static final String TOMORROW_MSG = "\u23E9";
+    public static final String TWO_DAYS_AHEAD_MSG = "\u23ED\uFE0F";
 
-    public static final String TWO_WEEKS_AGO_MSG = "🏳️";
-    public static final String LAST_WEEK_MSG = "🏴‍☠️️";
-    public static final String CURRENT_WEEK_MSG = "🚩";
-    public static final String NEXT_WEEK_MSG = "🏁";
-    public static final String TWO_WEEKS_AHEAD_MSG = "🏴";
+    public static final String TWO_WEEKS_AGO_MSG = "\uD83C\uDFF3\uFE0F";
+    public static final String LAST_WEEK_MSG = "\uD83C\uDFF4\u200D\u2620\uFE0F\uFE0F";
+    public static final String CURRENT_WEEK_MSG = "\uD83D\uDEA9";
+    public static final String NEXT_WEEK_MSG = "\uD83C\uDFC1";
+    public static final String TWO_WEEKS_AHEAD_MSG = "\uD83C\uDFF4";
 
     public static final Callback DEFAULT_CALLBACK = new Callback();
 
