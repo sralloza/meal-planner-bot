@@ -23,6 +23,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import repositories.MealPlannerRepository;
 import repositories.messages.MessagesRepository;
 import services.MealPlannerService;
+import utils.DateUtils;
 import utils.MealUtils;
 
 import java.io.IOException;
@@ -75,7 +76,8 @@ public class MealPlannerBotTest extends BaseTest {
         MockitoAnnotations.openMocks(this);
 
         var mealPlannerService = new MealPlannerService(mealPlannerRepository);
-        bot = new MealPlannerBot(messagesRepository, configRepository, new MealUtils(), keyboards, mealPlannerService);
+        MealUtils mealUtils = new MealUtils(new DateUtils());
+        bot = new MealPlannerBot(messagesRepository, configRepository, mealUtils, keyboards, mealPlannerService);
         bot.setSilent(silent);
 
         when(keyboards.getMainMenuKeyboard()).thenReturn(null);
