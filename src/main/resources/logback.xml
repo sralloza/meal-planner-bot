@@ -26,6 +26,8 @@
         <appender-ref ref="stdout"/>
     </root>
 
+    <Logger name="org.eclipse" level="WARN"/>
+
     <Logger name="services" level="${logLevel}"/>
     <Logger name="repositories" level="${logLevel}"/>
     <Logger name="mappers" level="${logLevel}"/>

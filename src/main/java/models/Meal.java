@@ -6,10 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.Optional;
 
 @Data
@@ -19,12 +16,6 @@ import java.util.Optional;
 public class Meal {
     @JsonProperty
     private LocalDate date;
-
-    public String getWeekday() {
-        Date date = Date.from(getDate().atStartOfDay(ZoneId.of("Europe/Madrid")).toInstant());
-        String dayName = new SimpleDateFormat("EEEE").format(date);
-        return dayName.substring(0, 1).toUpperCase() + dayName.substring(1);
-    }
 
     @JsonProperty
     private String lunch1;

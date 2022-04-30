@@ -19,4 +19,7 @@ public class ConfigRepository {
         return config.getBoolean(key);
     }
 
+    public Long getLong(String key) {
+        return config.getLong(key);
+    }
 }

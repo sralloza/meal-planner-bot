@@ -2,6 +2,8 @@ package bot;
 
 import com.google.inject.Inject;
 import config.ConfigRepository;
+import constants.Messages;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import models.Meal;
 import models.MealList;
@@ -33,6 +35,8 @@ public class MealPlannerBot extends BaseMealPlannerBot {
     private final Long creatorId;
     private final MealUtils mealUtils;
     private final Keyboards keyboards;
+
+    @Getter
     private Integer menuMessage;
 
     @Inject
@@ -47,10 +51,7 @@ public class MealPlannerBot extends BaseMealPlannerBot {
                 keyboards,
                 mealPlannerService);
 
-        creatorId = Optional.ofNullable(config.getString("telegram.creatorID"))
-                .map(Long::parseLong)
-                .orElseThrow(() -> new IllegalArgumentException("Creator id is empty"));
-
+        creatorId = config.getLong("telegram.creatorID");
         this.mealUtils = mealUtils;
         this.keyboards = keyboards;
     }
@@ -138,7 +139,7 @@ public class MealPlannerBot extends BaseMealPlannerBot {
 
     private void sendMenuAsync(MessageContext ctx) {
         SendMessage msg = new SendMessage();
-        msg.setText("*API connected*");
+        msg.setText(Messages.START_MSG);
         msg.disableNotification();
         msg.enableMarkdownV2(true);
         msg.setChatId(Long.toString(ctx.chatId()));

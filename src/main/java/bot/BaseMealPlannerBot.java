@@ -2,6 +2,7 @@ package bot;
 
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.MessageContext;
+import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import repositories.messages.MessagesRepository;
@@ -24,6 +25,10 @@ public abstract class BaseMealPlannerBot extends AbilityBot {
         this.messagesRepository = messagesRepository;
         this.keyboards = keyboards;
         this.service = service;
+    }
+
+    public void setSilent(SilentSender silentSender) {
+        this.silent = silentSender;
     }
 
     protected void sendMessage(String msgStr, Long chatId) {
