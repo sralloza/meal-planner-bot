@@ -23,6 +23,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import repositories.MealPlannerRepository;
 import repositories.messages.MessagesRepository;
 import services.MealPlannerService;
+import utils.DateProvider;
 import utils.DateUtils;
 import utils.MealUtils;
 
@@ -63,20 +64,24 @@ public class MealPlannerBotTest extends BaseTest {
     private static final Integer TG_MSG_USER_ID = 333333;
     private static final Integer TG_MSG_BOT_ID = 444444;
 
-    private final Meal YESTERDAY_MEAL = createMeal("YL1", "YL2", "YD1", 2022, 2, 14);
-    private final Meal TODAY_MEAL = createMeal("TL1", null, "TD1", 2022, 2, 15);
-    private final Meal TOMORROW_MEAL = createMeal("ML1", "ML2", "MD1", 2022, 2, 16);
+    private final Meal TWO_DAYS_AGO_MEAL = createMeal("GL1", "GL2", "GD", 2022, 2, 13);
+    private final Meal YESTERDAY_MEAL = createMeal("YL1", "YL2", "YD", 2022, 2, 14);
+    private final Meal TODAY_MEAL = createMeal("TL1", null, "TD", 2022, 2, 15);
+    private final Meal TOMORROW_MEAL = createMeal("ML1", "ML2", "MD", 2022, 2, 16);
+    private final Meal TWO_DAYS_AHEAD = createMeal("HL1", "HL2", "HD", 2022, 2, 17);
 
+    private final MealList TWO_WEEKS_AGO_MEALS = createMeals(7, 2022, 1, 31, "G");
     private final MealList LAST_WEEK_MEALS = createMeals(7, 2022, 2, 7, "L");
     private final MealList CURRENT_WEEK_MEALS = createMeals(6, 2022, 2, 14, "C");
     private final MealList NEXT_WEEK_MEALS = createMeals(5, 2022, 2, 21, "N");
+    private final MealList TWO_WEEKS_AHEAD_MEALS = createMeals(7, 2022, 3, 28, "H");
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
         var mealPlannerService = new MealPlannerService(mealPlannerRepository);
-        MealUtils mealUtils = new MealUtils(new DateUtils());
+        MealUtils mealUtils = new MealUtils(new DateUtils(new DateProvider()));
         bot = new MealPlannerBot(messagesRepository, configRepository, mealUtils, keyboards, mealPlannerService);
         bot.setSilent(silent);
 
@@ -94,13 +99,17 @@ public class MealPlannerBotTest extends BaseTest {
 
         when(messagesRepository.getMessages()).thenReturn(Collections.emptyList());
 
+        when(mealPlannerRepository.getTwoDaysAgoMeal()).thenReturn(CompletableFuture.completedFuture(TWO_DAYS_AGO_MEAL));
         when(mealPlannerRepository.getYesterdayMeal()).thenReturn(CompletableFuture.completedFuture(YESTERDAY_MEAL));
         when(mealPlannerRepository.getTodayMeal()).thenReturn(CompletableFuture.completedFuture(TODAY_MEAL));
         when(mealPlannerRepository.getTomorrowMeal()).thenReturn(CompletableFuture.completedFuture(TOMORROW_MEAL));
+        when(mealPlannerRepository.getTwoDaysAheadMeal()).thenReturn(CompletableFuture.completedFuture(TWO_DAYS_AHEAD));
 
+        when(mealPlannerRepository.getTwoWeeksAgoMealList()).thenReturn(CompletableFuture.completedFuture(TWO_WEEKS_AGO_MEALS));
         when(mealPlannerRepository.getLastWeekMeals()).thenReturn(CompletableFuture.completedFuture(LAST_WEEK_MEALS));
         when(mealPlannerRepository.getCurrentWeekMeals()).thenReturn(CompletableFuture.completedFuture(CURRENT_WEEK_MEALS));
         when(mealPlannerRepository.getNextWeekMeals()).thenReturn(CompletableFuture.completedFuture(NEXT_WEEK_MEALS));
+        when(mealPlannerRepository.getTwoWeeksAheadMealList()).thenReturn(CompletableFuture.completedFuture(TWO_WEEKS_AHEAD_MEALS));
     }
 
     @AfterEach
@@ -127,6 +136,15 @@ public class MealPlannerBotTest extends BaseTest {
     }
 
     // DEFAULT ability
+
+    @Test
+    public void shouldGetTwoDaysAgoMeal() {
+        MessageContext context = getContext(Messages.TOW_DAYS_AGO_MSG);
+        bot.processMsg().action().accept(context);
+
+        var expected = getMessageFromJson("twoDaysAgo");
+        Mockito.verify(silent).execute(new SendMessage(TG_CHAT_ID.toString(), expected));
+    }
 
     @Test
     public void shouldGetYesterdayMeal() {
@@ -156,6 +174,24 @@ public class MealPlannerBotTest extends BaseTest {
     }
 
     @Test
+    public void shouldGetTwoDaysAheadMeal() {
+        MessageContext context = getContext(Messages.TWO_DAYS_AHEAD_MSG);
+        bot.processMsg().action().accept(context);
+
+        var expected = getMessageFromJson("twoDaysAhead");
+        Mockito.verify(silent).execute(new SendMessage(TG_CHAT_ID.toString(), expected));
+    }
+
+    @Test
+    public void shouldGetTwoWeeksAgoMeals() {
+        MessageContext context = getContext(Messages.TWO_WEEKS_AGO_MSG);
+        bot.processMsg().action().accept(context);
+
+        var expected = getMessageFromJson("twoWeeksAgo");
+        Mockito.verify(silent).execute(new SendMessage(TG_CHAT_ID.toString(), expected));
+    }
+
+    @Test
     public void shouldGetLastWeekMeals() {
         MessageContext context = getContext(Messages.LAST_WEEK_MSG);
         bot.processMsg().action().accept(context);
@@ -179,6 +215,15 @@ public class MealPlannerBotTest extends BaseTest {
         bot.processMsg().action().accept(context);
 
         var expected = getMessageFromJson("nextWeek");
+        Mockito.verify(silent).execute(new SendMessage(TG_CHAT_ID.toString(), expected));
+    }
+
+    @Test
+    public void shouldGetTwoWeeksAheadMeals() {
+        MessageContext context = getContext(Messages.TWO_WEEKS_AHEAD_MSG);
+        bot.processMsg().action().accept(context);
+
+        var expected = getMessageFromJson("twoWeeksAhead");
         Mockito.verify(silent).execute(new SendMessage(TG_CHAT_ID.toString(), expected));
     }
 

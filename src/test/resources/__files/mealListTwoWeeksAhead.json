@@ -1,0 +1,65 @@
+[
+  {
+    "date": "2022-03-07",
+    "lunch1": "lunch1-two-weeks-ahead-monday",
+    "lunch1_frozen": false,
+    "lunch2": "lunch2-two-weeks-ahead-monday",
+    "lunch2_frozen": false,
+    "dinner": "dinner-two-weeks-ahead-monday",
+    "dinner_frozen": false
+  },
+  {
+    "date": "2022-03-08",
+    "lunch1": "lunch1-two-weeks-ahead-tuesday",
+    "lunch1_frozen": false,
+    "lunch2": null,
+    "lunch2_frozen": false,
+    "dinner": "dinner-two-weeks-ahead-tuesday",
+    "dinner_frozen": false
+  },
+  {
+    "date": "2022-03-09",
+    "lunch1": "lunch1-two-weeks-ahead-wednesday",
+    "lunch1_frozen": true,
+    "lunch2": "lunch2-two-weeks-ahead-wednesday",
+    "lunch2_frozen": false,
+    "dinner": "dinner-two-weeks-ahead-wednesday",
+    "dinner_frozen": false
+  },
+  {
+    "date": "2022-03-10",
+    "lunch1": "lunch1-two-weeks-ahead-thursday",
+    "lunch1_frozen": false,
+    "lunch2": "lunch2-two-weeks-ahead-thursday",
+    "lunch2_frozen": true,
+    "dinner": "dinner-two-weeks-ahead-thursday",
+    "dinner_frozen": true
+  },
+  {
+    "date": "2022-03-11",
+    "lunch1": "lunch1-two-weeks-ahead-friday",
+    "lunch1_frozen": true,
+    "lunch2": "lunch2-two-weeks-ahead-friday",
+    "lunch2_frozen": true,
+    "dinner": "dinner-two-weeks-ahead-friday",
+    "dinner_frozen": true
+  },
+  {
+    "date": "2022-03-12",
+    "lunch1": "lunch1-two-weeks-ahead-saturday",
+    "lunch1_frozen": false,
+    "lunch2": "null",
+    "lunch2_frozen": false,
+    "dinner": "N/A",
+    "dinner_frozen": false
+  },
+  {
+    "date": "2022-03-13",
+    "lunch1": "N/A",
+    "lunch1_frozen": false,
+    "lunch2": null,
+    "lunch2_frozen": false,
+    "dinner": "N/A",
+    "dinner_frozen": false
+  }
+]

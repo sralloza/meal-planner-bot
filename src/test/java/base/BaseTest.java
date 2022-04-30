@@ -48,6 +48,6 @@ public class BaseTest {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return null;
+        throw new RuntimeException("Failed to read file: " + filename);
     }
 }

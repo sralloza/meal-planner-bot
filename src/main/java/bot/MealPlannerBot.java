@@ -22,11 +22,15 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import static constants.Messages.CURRENT_WEEK_MSG;
+import static constants.Messages.TWO_DAYS_AHEAD_MSG;
+import static constants.Messages.TOW_DAYS_AGO_MSG;
 import static constants.Messages.LAST_WEEK_MSG;
 import static constants.Messages.NEXT_WEEK_MSG;
 import static constants.Messages.TITLE_MAP;
 import static constants.Messages.TODAY_MSG;
 import static constants.Messages.TOMORROW_MSG;
+import static constants.Messages.TWO_WEEKS_AGO_MSG;
+import static constants.Messages.TWO_WEEKS_AHEAD_MSG;
 import static constants.Messages.YESTERDAY_MSG;
 import static org.telegram.abilitybots.api.objects.Locality.USER;
 import static org.telegram.abilitybots.api.objects.Privacy.CREATOR;
@@ -123,14 +127,18 @@ public class MealPlannerBot extends BaseMealPlannerBot {
         //   3. Send data to user
         String title = TITLE_MAP.get(userMessage);
         switch (userMessage) {
+            case TOW_DAYS_AGO_MSG:
             case YESTERDAY_MSG:
             case TODAY_MSG:
             case TOMORROW_MSG:
+            case TWO_DAYS_AHEAD_MSG:
                 sendSingleMeal((Meal) future.get(), title, ctx.chatId());
                 break;
+            case TWO_WEEKS_AGO_MSG:
             case LAST_WEEK_MSG:
             case CURRENT_WEEK_MSG:
             case NEXT_WEEK_MSG:
+            case TWO_WEEKS_AHEAD_MSG:
                 sendMealList((MealList) future.get(), title, ctx.chatId());
                 break;
             default:
