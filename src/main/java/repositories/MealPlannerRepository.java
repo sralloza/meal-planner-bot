@@ -6,6 +6,7 @@ import models.Meal;
 import models.MealList;
 import utils.DateUtils;
 
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -18,29 +19,55 @@ public class MealPlannerRepository extends BaseRepository {
         this.dateUtils = dateUtils;
     }
 
-    public CompletableFuture<Meal> getYesterdayMeal() {
-        String yesterday = dateUtils.getYesterdayDate().toString();
-        return sendRequest("/meals/" + yesterday, Meal.class);
+    private CompletableFuture<Meal> getMealByDate(LocalDate date) {
+        return sendRequest("/meals/" + date.toString(), Meal.class);
     }
 
-    public CompletableFuture<Meal> getTodayMeal() {
-        return sendRequest("/meals/today", Meal.class);
-    }
-
-    public CompletableFuture<Meal> getTomorrowMeal() {
-        return sendRequest("/meals/tomorrow", Meal.class);
-    }
-
-    public CompletableFuture<MealList> getLastWeekMeals() {
-        int weekNumber = dateUtils.getLastWeekNumber();
+    private CompletableFuture<MealList> getMealListByWeekNumber(int weekNumber) {
         return sendRequest("/meals/week/" + weekNumber, MealList.class);
     }
 
+    private CompletableFuture<MealList> getMealListByWeekDelta(int weekDelta) {
+        return getMealListByWeekNumber(dateUtils.getWeekNumberByDeltaDays(weekDelta * 7));
+    }
+
+    public CompletableFuture<Meal> getTwoDaysAgoMeal() {
+        return getMealByDate(dateUtils.getTwoDaysAgoDate());
+    }
+
+    public CompletableFuture<Meal> getYesterdayMeal() {
+        return getMealByDate(dateUtils.getYesterdayDate());
+    }
+
+    public CompletableFuture<Meal> getTodayMeal() {
+        return getMealByDate(dateUtils.getTodayDate());
+    }
+
+    public CompletableFuture<Meal> getTomorrowMeal() {
+        return getMealByDate(dateUtils.getTomorrowDate());
+    }
+
+    public CompletableFuture<Meal> getTwoDaysAheadMeal() {
+        return getMealByDate(dateUtils.getTwoDaysAheadDate());
+    }
+
+    public CompletableFuture<MealList> getTwoWeeksAgoMealList() {
+        return getMealListByWeekDelta(-2);
+    }
+
+    public CompletableFuture<MealList> getLastWeekMeals() {
+        return getMealListByWeekDelta(-1);
+    }
+
     public CompletableFuture<MealList> getCurrentWeekMeals() {
-        return sendRequest("/meals/week/current", MealList.class);
+        return getMealListByWeekDelta(0);
     }
 
     public CompletableFuture<MealList> getNextWeekMeals() {
-        return sendRequest("/meals/week/next", MealList.class);
+        return getMealListByWeekDelta(1);
+    }
+
+    public CompletableFuture<MealList> getTwoWeeksAheadMealList() {
+        return getMealListByWeekDelta(2);
     }
 }
