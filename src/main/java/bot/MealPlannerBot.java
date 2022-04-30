@@ -3,6 +3,7 @@ package bot;
 import com.google.inject.Inject;
 import config.ConfigRepository;
 import constants.Messages;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import models.Meal;
 import models.MealList;
@@ -34,6 +35,8 @@ public class MealPlannerBot extends BaseMealPlannerBot {
     private final Long creatorId;
     private final MealUtils mealUtils;
     private final Keyboards keyboards;
+
+    @Getter
     private Integer menuMessage;
 
     @Inject

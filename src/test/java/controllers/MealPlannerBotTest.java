@@ -27,12 +27,16 @@ import utils.MealUtils;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 public class MealPlannerBotTest extends BaseTest {
@@ -54,8 +58,9 @@ public class MealPlannerBotTest extends BaseTest {
     private static final String TG_BOT_USERNAME = "telegramBotToken";
 
     private static final Long TG_USER_ID = 111111L;
-    private static final Integer TG_MESSAGE_ID = 333333;
     private static final Long TG_CHAT_ID = 222222L;
+    private static final Integer TG_MSG_USER_ID = 333333;
+    private static final Integer TG_MSG_BOT_ID = 444444;
 
     private final Meal YESTERDAY_MEAL = createMeal("YL1", "YL2", "YD1", 2022, 2, 14);
     private final Meal TODAY_MEAL = createMeal("TL1", null, "TD1", 2022, 2, 15);
@@ -75,9 +80,17 @@ public class MealPlannerBotTest extends BaseTest {
 
         when(keyboards.getMainMenuKeyboard()).thenReturn(null);
 
+        var msg = new Message();
+        msg.setMessageId(TG_MSG_BOT_ID);
+        when(silent.execute(any())).thenReturn(Optional.of(msg));
+        doAnswer(invocation -> invokeSentCallback(invocation, msg))
+                .when(silent).executeAsync(any(), any());
+
         when(configRepository.getString("telegram.bot.token")).thenReturn(TG_BOT_TOKEN);
         when(configRepository.getString("telegram.bot.username")).thenReturn(TG_BOT_USERNAME);
         when(configRepository.getLong("telegram.creatorID")).thenReturn(TG_USER_ID);
+
+        when(messagesRepository.getMessages()).thenReturn(Collections.emptyList());
 
         when(mealPlannerRepository.getYesterdayMeal()).thenReturn(CompletableFuture.completedFuture(YESTERDAY_MEAL));
         when(mealPlannerRepository.getTodayMeal()).thenReturn(CompletableFuture.completedFuture(TODAY_MEAL));
@@ -97,12 +110,18 @@ public class MealPlannerBotTest extends BaseTest {
 
     @Test
     public void shouldStartBot() {
-        MessageContext context = getContext(Messages.YESTERDAY_MSG);
+        assertNull(bot.getMenuMessage());
+
+        MessageContext context = getContext("/start");
         bot.start().action().accept(context);
+
+        assertEquals(TG_MSG_BOT_ID, bot.getMenuMessage());
         SendMessage message = new SendMessage(TG_CHAT_ID.toString(), Messages.START_MSG);
         message.enableMarkdownV2(true);
         message.disableNotification();
         Mockito.verify(silent).executeAsync(eq(message), any());
+
+//        assertMessageDeleted(TG_CHAT_ID, TG_MSG_USER_ID, silent);
     }
 
     // DEFAULT ability
@@ -165,7 +184,7 @@ public class MealPlannerBotTest extends BaseTest {
         Message msg = new Message();
         msg.setText(text);
         msg.setChat(new Chat());
-        msg.setMessageId(TG_MESSAGE_ID);
+        msg.setMessageId(TG_MSG_USER_ID);
         return msg;
     }
 
