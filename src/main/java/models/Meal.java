@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 
 @Data
@@ -22,7 +23,7 @@ public class Meal {
 
     public String getWeekday() {
         Date date = Date.from(getDate().atStartOfDay(ZoneId.of("Europe/Madrid")).toInstant());
-        String dayName = new SimpleDateFormat("EEEE").format(date);
+        String dayName = new SimpleDateFormat("EEEE", Locale.forLanguageTag("es-ES")).format(date);
         return dayName.substring(0, 1).toUpperCase() + dayName.substring(1);
     }
 
