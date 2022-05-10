@@ -3,6 +3,7 @@ package repositories;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import config.ConfigRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,15 +19,25 @@ import java.util.concurrent.CompletableFuture;
 public class BaseRepository {
     private final String baseURL;
     private final Map<String, String> headers;
+    private final boolean http2;
 
-    public BaseRepository(String baseURL, Map<String, String> headers) {
+    public BaseRepository(String baseURL, Map<String, String> headers, ConfigRepository config) {
         this.baseURL = baseURL;
         this.headers = headers;
+        this.http2 = config.getBoolean("api.http2");
+    }
+
+    private HttpClient.Version getHttpClientVersion() {
+        return http2 ? HttpClient.Version.HTTP_2 : HttpClient.Version.HTTP_1_1;
     }
 
     protected <T> CompletableFuture<T> sendRequest(String path, Class<T> clazz) {
         HttpClient client = HttpClient.newHttpClient();
+        HttpClient.Version version = getHttpClientVersion();
+        log.debug("Using {}", version);
+
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
+                .version(version)
                 .uri(URI.create(baseURL + path))
                 .header("Content-Type", "application/json")
                 .header("User-Agent", "MealPlanner/1.0")
