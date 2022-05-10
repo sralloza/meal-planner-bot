@@ -15,7 +15,7 @@ public class MealPlannerRepository extends BaseRepository {
 
     @Inject
     public MealPlannerRepository(ConfigRepository config, DateUtils dateUtils) {
-        super(config.getString("api.baseURL"), Map.of("X-Token", config.getString("api.token")));
+        super(config.getString("api.baseURL"), Map.of("X-Token", config.getString("api.token")), config);
         this.dateUtils = dateUtils;
     }
 
