@@ -102,7 +102,7 @@ public class MealPlannerBot extends BaseMealPlannerBot {
                 .map(m -> msg + ":\n" + mealUtils.toString(m))
                 .orElse("Could not find " + msg.toLowerCase());
 
-        sendMessage(message, chatId);
+        sendMessageMarkdown(message, chatId);
     }
 
     private void sendMealList(MealList meals, String msg, Long chatId) {
@@ -110,7 +110,7 @@ public class MealPlannerBot extends BaseMealPlannerBot {
                 .map(m -> msg + ":\n" + mealUtils.toString(m))
                 .orElse("Could not find " + msg.toLowerCase());
 
-        sendMessage(message, chatId);
+        sendMessageMarkdown(message, chatId);
     }
 
     @SneakyThrows

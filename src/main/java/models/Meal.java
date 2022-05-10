@@ -35,10 +35,33 @@ public class Meal {
     @JsonProperty("dinner_frozen")
     private boolean dinnerFrozen;
 
+    public String getLunch1Markdown() {
+        return format(lunch1, lunch1Frozen);
+    }
+
+    public String getLunch2Markdown() {
+        return format(lunch2, lunch2Frozen);
+    }
+
+    public String getDinnerMarkdown() {
+        return format(dinner, dinnerFrozen);
+    }
+
     public String toReadableString() {
         if (Optional.ofNullable(lunch2).orElse("").isEmpty()) {
-            return lunch1.toLowerCase() + " | " + dinner.toLowerCase();
+            return getLunch1Markdown() + " | " + getDinnerMarkdown();
         }
-        return lunch1.toLowerCase() + " & " + lunch2.toLowerCase() + " | " + dinner.toLowerCase();
+        return getLunch1Markdown() + " & " + getLunch2Markdown() + " | " + getDinnerMarkdown();
+    }
+
+    private String format(String meal, boolean frozen) {
+        if (meal == null) {
+            return "__*_NULL_*__";
+        }
+        meal = meal.toLowerCase();
+        if (frozen) {
+            return "__*_" + meal + "_*__";
+        }
+        return meal;
     }
 }
