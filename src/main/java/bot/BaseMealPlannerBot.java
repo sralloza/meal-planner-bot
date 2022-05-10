@@ -1,5 +1,6 @@
 package bot;
 
+import lombok.extern.slf4j.Slf4j;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.MessageContext;
 import org.telegram.abilitybots.api.sender.SilentSender;
@@ -11,6 +12,7 @@ import services.MealPlannerService;
 import static constants.Messages.DEFAULT_CALLBACK;
 import static org.telegram.abilitybots.api.db.MapDBContext.offlineInstance;
 
+@Slf4j
 public abstract class BaseMealPlannerBot extends AbilityBot {
     private final MessagesRepository messagesRepository;
     private final Keyboards keyboards;
@@ -31,9 +33,13 @@ public abstract class BaseMealPlannerBot extends AbilityBot {
         this.silent = silentSender;
     }
 
-    protected void sendMessage(String msgStr, Long chatId) {
+    protected void sendMessageMarkdown(String msgStr, Long chatId) {
+        msgStr = msgStr.replace("-", "\\-")
+                .replace("|", "\\|");
+        log.debug("Sending message with markdownV2 enabled: {}", msgStr);
         SendMessage msg = new SendMessage();
         msg.setText(msgStr);
+        msg.enableMarkdownV2(true);
         msg.setChatId(chatId.toString());
         msg.setReplyMarkup(keyboards.getMainMenuKeyboard());
 
