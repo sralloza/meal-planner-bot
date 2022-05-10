@@ -67,7 +67,7 @@ public class MealPlannerBotTest extends BaseTest {
     private final Meal TWO_DAYS_AGO_MEAL = createMeal("GL1", "GL2", "GD", 2022, 2, 13);
     private final Meal YESTERDAY_MEAL = createMeal("YL1", "YL2", "YD", 2022, 2, 14);
     private final Meal TODAY_MEAL = createMeal("TL1", null, "TD", 2022, 2, 15);
-    private final Meal TOMORROW_MEAL = createMeal("ML1", "ML2", "MD", 2022, 2, 16);
+    private final Meal TOMORROW_MEAL = createMeal("ML1", "ML2", null, 2022, 2, 16);
     private final Meal TWO_DAYS_AHEAD = createMeal("HL1", "HL2", "HD", 2022, 2, 17);
 
     private final MealList TWO_WEEKS_AGO_MEALS = createMeals(7, 2022, 1, 31, "G");
@@ -79,6 +79,10 @@ public class MealPlannerBotTest extends BaseTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        YESTERDAY_MEAL.setLunch1Frozen(true);
+        YESTERDAY_MEAL.setLunch2Frozen(true);
+        YESTERDAY_MEAL.setDinnerFrozen(true);
 
         var mealPlannerService = new MealPlannerService(mealPlannerRepository);
         MealUtils mealUtils = new MealUtils(new DateUtils(new DateProvider()));
@@ -138,12 +142,26 @@ public class MealPlannerBotTest extends BaseTest {
     // DEFAULT ability
 
     @Test
+    public void shouldSendMenuIfUnkownMessage() {
+        assertNull(bot.getMenuMessage());
+
+        MessageContext context = getContext("somethingUnusual");
+        bot.start().action().accept(context);
+
+        assertEquals(TG_MSG_BOT_ID, bot.getMenuMessage());
+        SendMessage message = new SendMessage(TG_CHAT_ID.toString(), Messages.START_MSG);
+        message.enableMarkdownV2(true);
+        message.disableNotification();
+        Mockito.verify(silent).executeAsync(eq(message), any());
+    }
+
+    @Test
     public void shouldGetTwoDaysAgoMeal() {
         MessageContext context = getContext(Messages.TOW_DAYS_AGO_MSG);
         bot.processMsg().action().accept(context);
 
         var expected = getMessageFromJson("twoDaysAgo");
-        Mockito.verify(silent).execute(new SendMessage(TG_CHAT_ID.toString(), expected));
+        Mockito.verify(silent).execute(getSendMessageMd(TG_CHAT_ID.toString(), expected));
     }
 
     @Test
@@ -152,7 +170,7 @@ public class MealPlannerBotTest extends BaseTest {
         bot.processMsg().action().accept(context);
 
         var expected = getMessageFromJson("yesterday");
-        Mockito.verify(silent).execute(new SendMessage(TG_CHAT_ID.toString(), expected));
+        Mockito.verify(silent).execute(getSendMessageMd(TG_CHAT_ID.toString(), expected));
     }
 
     @Test
@@ -161,7 +179,7 @@ public class MealPlannerBotTest extends BaseTest {
         bot.processMsg().action().accept(context);
 
         var expected = getMessageFromJson("today");
-        Mockito.verify(silent).execute(new SendMessage(TG_CHAT_ID.toString(), expected));
+        Mockito.verify(silent).execute(getSendMessageMd(TG_CHAT_ID.toString(), expected));
     }
 
     @Test
@@ -170,7 +188,7 @@ public class MealPlannerBotTest extends BaseTest {
         bot.processMsg().action().accept(context);
 
         var expected = getMessageFromJson("tomorrow");
-        Mockito.verify(silent).execute(new SendMessage(TG_CHAT_ID.toString(), expected));
+        Mockito.verify(silent).execute(getSendMessageMd(TG_CHAT_ID.toString(), expected));
     }
 
     @Test
@@ -179,7 +197,7 @@ public class MealPlannerBotTest extends BaseTest {
         bot.processMsg().action().accept(context);
 
         var expected = getMessageFromJson("twoDaysAhead");
-        Mockito.verify(silent).execute(new SendMessage(TG_CHAT_ID.toString(), expected));
+        Mockito.verify(silent).execute(getSendMessageMd(TG_CHAT_ID.toString(), expected));
     }
 
     @Test
@@ -188,7 +206,7 @@ public class MealPlannerBotTest extends BaseTest {
         bot.processMsg().action().accept(context);
 
         var expected = getMessageFromJson("twoWeeksAgo");
-        Mockito.verify(silent).execute(new SendMessage(TG_CHAT_ID.toString(), expected));
+        Mockito.verify(silent).execute(getSendMessageMd(TG_CHAT_ID.toString(), expected));
     }
 
     @Test
@@ -197,7 +215,7 @@ public class MealPlannerBotTest extends BaseTest {
         bot.processMsg().action().accept(context);
 
         var expected = getMessageFromJson("lastWeek");
-        Mockito.verify(silent).execute(new SendMessage(TG_CHAT_ID.toString(), expected));
+        Mockito.verify(silent).execute(getSendMessageMd(TG_CHAT_ID.toString(), expected));
     }
 
     @Test
@@ -206,7 +224,7 @@ public class MealPlannerBotTest extends BaseTest {
         bot.processMsg().action().accept(context);
 
         var expected = getMessageFromJson("currentWeek");
-        Mockito.verify(silent).execute(new SendMessage(TG_CHAT_ID.toString(), expected));
+        Mockito.verify(silent).execute(getSendMessageMd(TG_CHAT_ID.toString(), expected));
     }
 
     @Test
@@ -215,7 +233,7 @@ public class MealPlannerBotTest extends BaseTest {
         bot.processMsg().action().accept(context);
 
         var expected = getMessageFromJson("nextWeek");
-        Mockito.verify(silent).execute(new SendMessage(TG_CHAT_ID.toString(), expected));
+        Mockito.verify(silent).execute(getSendMessageMd(TG_CHAT_ID.toString(), expected));
     }
 
     @Test
@@ -224,7 +242,13 @@ public class MealPlannerBotTest extends BaseTest {
         bot.processMsg().action().accept(context);
 
         var expected = getMessageFromJson("twoWeeksAhead");
-        Mockito.verify(silent).execute(new SendMessage(TG_CHAT_ID.toString(), expected));
+        Mockito.verify(silent).execute(getSendMessageMd(TG_CHAT_ID.toString(), expected));
+    }
+
+    private SendMessage getSendMessageMd(String chatId, String text) {
+        var msg = new SendMessage(chatId, text);
+        msg.enableMarkdownV2(true);
+        return msg;
     }
 
     private Message getMessage(String text) {

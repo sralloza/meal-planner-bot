@@ -49,12 +49,15 @@ public class Meal {
 
     public String toReadableString() {
         if (Optional.ofNullable(lunch2).orElse("").isEmpty()) {
-            return getLunch1Markdown() + " | " + getLunch2Markdown();
+            return getLunch1Markdown() + " | " + getDinnerMarkdown();
         }
         return getLunch1Markdown() + " & " + getLunch2Markdown() + " | " + getDinnerMarkdown();
     }
 
     private String format(String meal, boolean frozen) {
+        if (meal == null) {
+            return "__*_NULL_*__";
+        }
         meal = meal.toLowerCase();
         if (frozen) {
             return "__*_" + meal + "_*__";
