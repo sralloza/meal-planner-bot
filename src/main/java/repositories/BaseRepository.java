@@ -27,6 +27,7 @@ public class BaseRepository {
     protected <T> CompletableFuture<T> sendRequest(String path, Class<T> clazz) {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)
                 .uri(URI.create(baseURL + path))
                 .header("Content-Type", "application/json")
                 .header("User-Agent", "MealPlanner/1.0")
