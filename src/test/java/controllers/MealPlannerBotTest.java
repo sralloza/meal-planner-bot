@@ -3,7 +3,7 @@ package controllers;
 import base.BaseTest;
 import bot.Keyboards;
 import bot.MealPlannerBot;
-import config.ConfigRepository;
+import com.typesafe.config.Config;
 import constants.Messages;
 import models.Meal;
 import models.MealList;
@@ -45,7 +45,7 @@ public class MealPlannerBotTest extends BaseTest {
     @Mock
     private MessagesRepository messagesRepository;
     @Mock
-    private ConfigRepository configRepository;
+    private Config config;
     @Mock
     private Keyboards keyboards;
     @Mock
@@ -58,6 +58,9 @@ public class MealPlannerBotTest extends BaseTest {
     private static final String MESSAGES_JSON = "messages.json";
     private static final String TG_BOT_TOKEN = "telegramBotToken";
     private static final String TG_BOT_USERNAME = "telegramBotToken";
+
+    private static final String TG_LEFT_TOKEN = "__*_";
+    private static final String TG_RIGHT_TOKEN = "_*__";
 
     private static final Long TG_USER_ID = 111111L;
     private static final Long TG_CHAT_ID = 222222L;
@@ -80,13 +83,19 @@ public class MealPlannerBotTest extends BaseTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
+        when(config.getString("telegram.bot.token")).thenReturn(TG_BOT_TOKEN);
+        when(config.getString("telegram.bot.username")).thenReturn(TG_BOT_USERNAME);
+        when(config.getLong("telegram.creatorID")).thenReturn(TG_USER_ID);
+        when(config.getString("telegram.style.frozenTokens.left")).thenReturn(TG_LEFT_TOKEN);
+        when(config.getString("telegram.style.frozenTokens.right")).thenReturn(TG_RIGHT_TOKEN);
+
         YESTERDAY_MEAL.setLunch1Frozen(true);
         YESTERDAY_MEAL.setLunch2Frozen(true);
         YESTERDAY_MEAL.setDinnerFrozen(true);
 
         var mealPlannerService = new MealPlannerService(mealPlannerRepository);
-        MealUtils mealUtils = new MealUtils(new DateUtils(new DateProvider()));
-        bot = new MealPlannerBot(messagesRepository, configRepository, mealUtils, keyboards, mealPlannerService);
+        MealUtils mealUtils = new MealUtils(new DateUtils(new DateProvider()), config);
+        bot = new MealPlannerBot(messagesRepository, config, mealUtils, keyboards, mealPlannerService);
         bot.setSilent(silent);
 
         when(keyboards.getMainMenuKeyboard()).thenReturn(null);
@@ -96,10 +105,6 @@ public class MealPlannerBotTest extends BaseTest {
         when(silent.execute(any())).thenReturn(Optional.of(msg));
         doAnswer(invocation -> invokeSentCallback(invocation, msg))
                 .when(silent).executeAsync(any(), any());
-
-        when(configRepository.getString("telegram.bot.token")).thenReturn(TG_BOT_TOKEN);
-        when(configRepository.getString("telegram.bot.username")).thenReturn(TG_BOT_USERNAME);
-        when(configRepository.getLong("telegram.creatorID")).thenReturn(TG_USER_ID);
 
         when(messagesRepository.getMessages()).thenReturn(Collections.emptyList());
 
