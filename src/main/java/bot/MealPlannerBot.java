@@ -1,7 +1,7 @@
 package bot;
 
 import com.google.inject.Inject;
-import config.ConfigRepository;
+import com.typesafe.config.Config;
 import constants.Messages;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -22,13 +22,13 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import static constants.Messages.CURRENT_WEEK_MSG;
-import static constants.Messages.TWO_DAYS_AHEAD_MSG;
-import static constants.Messages.TOW_DAYS_AGO_MSG;
 import static constants.Messages.LAST_WEEK_MSG;
 import static constants.Messages.NEXT_WEEK_MSG;
 import static constants.Messages.TITLE_MAP;
 import static constants.Messages.TODAY_MSG;
 import static constants.Messages.TOMORROW_MSG;
+import static constants.Messages.TOW_DAYS_AGO_MSG;
+import static constants.Messages.TWO_DAYS_AHEAD_MSG;
 import static constants.Messages.TWO_WEEKS_AGO_MSG;
 import static constants.Messages.TWO_WEEKS_AHEAD_MSG;
 import static constants.Messages.YESTERDAY_MSG;
@@ -45,7 +45,7 @@ public class MealPlannerBot extends BaseMealPlannerBot {
 
     @Inject
     public MealPlannerBot(MessagesRepository messagesRepository,
-                          ConfigRepository config,
+                          Config config,
                           MealUtils mealUtils,
                           Keyboards keyboards,
                           MealPlannerService mealPlannerService) {
