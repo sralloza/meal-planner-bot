@@ -184,3 +184,4 @@ bin/
 /**/.DS_Store
 db
 db.wal.0
+.env

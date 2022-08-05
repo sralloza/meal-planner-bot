@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import config.ConfigRepository;
+import exceptions.APIException;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,12 +12,15 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 public class BaseRepository {
+    private static final Set<Integer> VALID_STATUS_CODES = Set.of(200, 201, 204);
     private final String baseURL;
     private final Map<String, String> headers;
     private final boolean http2;
@@ -32,6 +36,10 @@ public class BaseRepository {
     }
 
     protected <T> CompletableFuture<T> sendRequest(String path, Class<T> clazz) {
+        return sendRequest("GET", path, clazz);
+    }
+
+    protected <T> CompletableFuture<T> sendRequest(String method, String path, Class<T> clazz) {
         HttpClient client = HttpClient.newHttpClient();
         HttpClient.Version version = getHttpClientVersion();
         log.debug("Using {}", version);
@@ -40,11 +48,25 @@ public class BaseRepository {
                 .version(version)
                 .uri(URI.create(baseURL + path))
                 .header("Content-Type", "application/json")
-                .header("User-Agent", "MealPlanner/1.0")
-                .GET();
+                .header("User-Agent", "ChoreManagementBot/1.0");
 
         for (Map.Entry<String, String> header : headers.entrySet()) {
             requestBuilder = requestBuilder.header(header.getKey(), header.getValue());
+        }
+
+        switch (method) {
+            case "POST":
+                requestBuilder = requestBuilder.POST(HttpRequest.BodyPublishers.noBody());
+                break;
+            case "PUT":
+                requestBuilder = requestBuilder.PUT(HttpRequest.BodyPublishers.noBody());
+                break;
+            case "DELETE":
+                requestBuilder = requestBuilder.DELETE();
+                break;
+            default:
+                requestBuilder = requestBuilder.GET();
+                break;
         }
 
         HttpRequest request = requestBuilder.build();
@@ -57,6 +79,9 @@ public class BaseRepository {
     }
 
     private <T> T processBody(String body, Class<T> clazz) {
+        if (clazz == null) {
+            return null;
+        }
         ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
         try {
             return mapper.readValue(body, clazz);
@@ -74,9 +99,10 @@ public class BaseRepository {
         log.debug("Response headers: " + response.headers());
         log.debug("Response body: " + response.body());
 
-        if (response.statusCode() == 404) {
-            return Optional.empty();
+        if (!VALID_STATUS_CODES.contains(response.statusCode())) {
+            throw new APIException(response);
         }
+
         return Optional.of(response.body());
     }
 }
