@@ -69,11 +69,14 @@ def telegram_client(context):
     async def main():
         await client.start(phone=phone)
         authorized = await client.is_user_authorized()
-        print("Client authorized:", authorized)
+        if not authorized:
+            print("WARNING: NOT AUTHORIZED")
 
     client.loop.run_until_complete(main())
 
     yield client
+
+    client.disconnect()
 
 
 def register_allure_stdout_stderr(context):

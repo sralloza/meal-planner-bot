@@ -22,4 +22,4 @@ def step_impl(context, msg):
     actual = parse_keyboard(keyboard)
 
     assert_that(msg, equal_to(context.res.raw_text))
-    assert_that(expected, equal_to(actual))
+    assert_that(actual, equal_to(expected))
