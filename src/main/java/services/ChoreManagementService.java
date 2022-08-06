@@ -3,12 +3,12 @@ package services;
 import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import models.SimpleChoreList;
+import models.TenantList;
 import models.TicketList;
 import models.WeeklyChores;
 import models.WeeklyChoresList;
 import repositories.ChoreManagementRepository;
 
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 
@@ -47,5 +47,9 @@ public class ChoreManagementService {
 
     public CompletableFuture<WeeklyChores> createWeeklyChores(String weekId) {
         return repository.createWeeklyChores(weekId);
+    }
+
+    public CompletableFuture<TenantList> getTenants() {
+        return repository.getTenants();
     }
 }

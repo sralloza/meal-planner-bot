@@ -12,7 +12,7 @@ RUN ./gradlew fat -i
 
 FROM sralloza/openjdk:11-jre
 
-RUN mkdir /app
+COPY utils/wait-for-it.sh /app/wait-for-it.sh
 
 COPY --from=build /home/gradle/build/libs/*.jar /app/meal-planner-bot.jar
 

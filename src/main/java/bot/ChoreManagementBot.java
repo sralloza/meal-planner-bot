@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import models.SimpleChoreList;
+import models.Tenant;
 import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.abilitybots.api.objects.MessageContext;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -53,6 +54,7 @@ public class ChoreManagementBot extends BaseChoreManagementBot {
     private final Keyboards keyboards;
     private final TableUtilsLatex tableUtils;
     private final Integer tenantId = 1;
+    private List<Tenant> tenantList;
 
     @Getter
     private Integer menuMessage;
@@ -69,6 +71,13 @@ public class ChoreManagementBot extends BaseChoreManagementBot {
         creatorId = config.getLong("telegram.creatorID");
         this.keyboards = keyboards;
         this.tableUtils = tableUtils;
+        try {
+            tenantList = mealPlannerService.getTenants().get();
+        } catch (Exception e) {
+            tenantList = List.of();
+            log.error("Error getting tenants", e);
+            System.exit(1);
+        }
     }
 
     @Override
